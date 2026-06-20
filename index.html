@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -220,7 +221,6 @@
     <div id="main-tracker-container"></div>
 
 <script>
-// Updated syllabusData to strictly contain all 16 Chemistry Chapters
 const syllabusData = {
     "Physics": [
         "Electric Charges and Fields", "Electrostatic Potential and Capacitance", "Current Electricity",
@@ -402,7 +402,8 @@ function evaluateMetrics() {
             }
 
             let testScoreInput = document.getElementById(`score_${subject}_${index}`);
-            let testScore = parseInt(testScoreInput.value) || 0;
+            // Fix: Fallback to 0 if input is empty string or null
+            let testScore = (testScoreInput && testScoreInput.value !== "") ? parseInt(testScoreInput.value) : 0;
 
             taskTemplates[subject].forEach(task => {
                 totalTasks++;
