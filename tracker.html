@@ -1,0 +1,450 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ Advanced Class 12 PCM Board Tracker (16 Chemistry Chapters)</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-green: #22c55e;
+            --accent-yellow: #facc15;
+            --text-main: #f8fafc;
+            --border-glow: #334155;
+            --ready-green: rgba(34, 197, 94, 0.15);
+            --ready-border: #22c55e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding: 25px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--accent-blue);
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-glow);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .stat-val {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-yellow);
+        }
+
+        .progress-container {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-glow);
+            margin-bottom: 30px;
+        }
+
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .main-bar {
+            width: 100%;
+            height: 25px;
+            background: #334155;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+            transition: width 0.5s ease-in-out;
+        }
+
+        .subject-section {
+            margin-bottom: 40px;
+        }
+
+        .subject-title {
+            color: var(--accent-yellow);
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--border-glow);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .chapter-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .chapter-card.ready {
+            background: var(--ready-green);
+            border-color: var(--ready-border);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.25);
+        }
+
+        .chapter-card h4 {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: #f1f5f9;
+            line-height: 1.4;
+        }
+
+        .task-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .task-row input[type="checkbox"] {
+            margin-right: 12px;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--accent-green);
+        }
+
+        .input-group {
+            margin: 12px 0 12px 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group span {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        input[type="number"] {
+            width: 80px;
+            background: #0f172a;
+            border: 1px solid #475569;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📚 Class 12 PCM Advanced Board Tracker</h1>
+
+    <div class="dashboard">
+        <div class="card">
+            <h3>🎯 Target vs Status</h3>
+            <div>Target: <span style="color:var(--accent-blue)">85%</span></div>
+            <div style="margin-top:5px;">Current Readiness: <span id="dashReadiness" class="stat-val">0%</span></div>
+        </div>
+        <div class="card">
+            <h3>⚛️ Physics Subject</h3>
+            <div id="physicsCount" class="stat-val">0 / 14</div>
+            <span style="font-size:0.85rem; color:#94a3b8;">Chapters fully ready</span>
+        </div>
+        <div class="card">
+            <h3>🧪 Chemistry Subject</h3>
+            <div id="chemistryCount" class="stat-val">0 / 16</div>
+            <span style="font-size:0.85rem; color:#94a3b8;">Chapters fully ready</span>
+        </div>
+        <div class="card">
+            <h3>📐 Mathematics Subject</h3>
+            <div id="mathCount" class="stat-val">0 / 13</div>
+            <span style="font-size:0.85rem; color:#94a3b8;">Chapters fully ready</span>
+        </div>
+    </div>
+
+    <div class="progress-container">
+        <div class="bar-label">
+            <span>Overall Task Completion Metrics</span>
+            <span id="overallPercent">0%</span>
+        </div>
+        <div class="main-bar">
+            <div id="overallFill" class="fill"></div>
+        </div>
+        <div style="margin-top: 10px; font-size: 0.9rem; color: var(--accent-yellow);" id="totalTasksCount">
+            Tasks Done: 0 / 387
+        </div>
+    </div>
+
+    <div id="main-tracker-container"></div>
+
+<script>
+// Updated syllabusData to strictly contain all 16 Chemistry Chapters
+const syllabusData = {
+    "Physics": [
+        "Electric Charges and Fields", "Electrostatic Potential and Capacitance", "Current Electricity",
+        "Moving Charges and Magnetism", "Magnetism and Matter", "Electromagnetic Induction",
+        "Alternating Current", "Electromagnetic Waves", "Ray Optics and Optical Instruments",
+        "Wave Optics", "Dual Nature of Radiation and Matter", "Atoms", "Nuclei",
+        "Semiconductor Electronics: Materials, Devices and Simple Circuits"
+    ],
+    "Chemistry": [
+        "The Solid State", "Solutions", "Electrochemistry", "Chemical Kinetics", 
+        "Surface Chemistry", "General Principles and Processes of Isolation of Elements", 
+        "The p-Block Elements", "The d- and f-Block Elements", "Coordination Compounds", 
+        "Haloalkanes and Haloarenes", "Alcohols, Phenols and Ethers", "Aldehydes, Ketones and Carboxylic Acids", 
+        "Amines", "Biomolecules", "Polymers", "Chemistry in Everyday Life"
+    ],
+    "Mathematics": [
+        "Relations and Functions", "Inverse Trigonometric Functions", "Matrices", "Determinants",
+        "Continuity and Differentiability", "Applications of Derivatives", "Integrals",
+        "Applications of Integrals", "Differential Equations", "Vector Algebra",
+        "Three Dimensional Geometry", "Linear Programming", "Probability"
+    ]
+};
+
+const taskTemplates = {
+    "Physics": [
+        { id: "theory", label: "📚 Theory Complete" },
+        { id: "ncert", label: "📝 NCERT Complete" },
+        { id: "numericals", label: "🔢 Numericals Practice" },
+        { id: "pyq", label: "🗂️ PYQ Complete" },
+        { id: "formula", label: "🗒️ Formula Sheet Ready" },
+        { id: "test", label: "🎯 Chapter Test Given" },
+        { id: "rev1", label: "🔄 Revision 1" },
+        { id: "rev2", label: "🔄 Revision 2" },
+        { id: "rev3", label: "🔄 Revision 3" }
+    ],
+    "Chemistry": [
+        { id: "theory", label: "📚 Theory Complete" },
+        { id: "ncert", label: "🧪 NCERT Line-by-Line" },
+        { id: "reactions", label: "⚗️ Reactions Learned" },
+        { id: "named", label: "🧬 Named Reactions Learned" },
+        { id: "pyq", label: "🗂️ PYQ Complete" },
+        { id: "test", label: "🎯 Chapter Test Given" },
+        { id: "rev1", label: "🔄 Revision 1" },
+        { id: "rev2", label: "🔄 Revision 2" },
+        { id: "rev3", label: "🔄 Revision 3" }
+    ],
+    "Mathematics": [
+        { id: "theory", label: "📚 Concept/Theory Clear" },
+        { id: "ncert_examp", label: "📐 NCERT Examples" },
+        { id: "ncert_exer", label: "✏️ NCERT Exercise" },
+        { id: "pyq", label: "🗂️ PYQ Complete" },
+        { id: "formula", label: "🧮 Formula Revision" },
+        { id: "test", label: "🎯 Chapter Test Given" },
+        { id: "rev1", label: "🔄 Revision 1" },
+        { id: "rev2", label: "🔄 Revision 2" },
+        { id: "rev3", label: "🔄 Revision 3" }
+    ]
+};
+
+const container = document.getElementById("main-tracker-container");
+
+for (let subject in syllabusData) {
+    let subSection = document.createElement("div");
+    subSection.className = "subject-section";
+    
+    let heading = document.createElement("h2");
+    heading.className = "subject-title";
+    heading.innerText = subject;
+    subSection.appendChild(heading);
+
+    let grid = document.createElement("div");
+    grid.className = "chapters-grid";
+
+    syllabusData[subject].forEach((chapter, index) => {
+        let chCard = document.createElement("div");
+        chCard.className = "chapter-card";
+        chCard.id = `card_${subject}_${index}`;
+        
+        let chTitle = document.createElement("h4");
+        chTitle.innerText = `${index + 1}. ${chapter}`;
+        chCard.appendChild(chTitle);
+
+        taskTemplates[subject].forEach(task => {
+            let row = document.createElement("div");
+            row.className = "task-row";
+            
+            let cb = document.createElement("input");
+            cb.type = "checkbox";
+            cb.id = `cb_${subject}_${index}_${task.id}`;
+            
+            let lbl = document.createElement("label");
+            lbl.setAttribute("for", cb.id);
+            lbl.innerText = task.label;
+
+            row.appendChild(cb);
+            row.appendChild(lbl);
+            chCard.appendChild(row);
+
+            if(task.id === "test") {
+                let inputGrp = document.createElement("div");
+                inputGrp.className = "input-group";
+                inputGrp.innerHTML = `
+                    <span>Score:</span>
+                    <input type="number" id="score_${subject}_${index}" min="0" max="100" placeholder="%">
+                `;
+                chCard.appendChild(inputGrp);
+            }
+            if(task.id === "pyq") {
+                let targetQs = (subject === "Mathematics") ? 50 : 30;
+                let inputGrp = document.createElement("div");
+                inputGrp.className = "input-group";
+                inputGrp.innerHTML = `
+                    <span>Solved:</span>
+                    <input type="number" id="qs_${subject}_${index}" min="0" placeholder="0">
+                    <span>/ ${targetQs} Qs</span>
+                `;
+                chCard.appendChild(inputGrp);
+            }
+        });
+
+        grid.appendChild(chCard);
+    });
+
+    subSection.appendChild(grid);
+    container.appendChild(subSection);
+}
+
+function initTrackingEngine() {
+    const allCheckboxes = document.querySelectorAll("input[type='checkbox']");
+    const allNumInputs = document.querySelectorAll("input[type='number']");
+
+    allCheckboxes.forEach(cb => {
+        if(localStorage.getItem(cb.id) === "true") {
+            cb.checked = true;
+        }
+        cb.addEventListener("change", () => {
+            localStorage.setItem(cb.id, cb.checked);
+            evaluateMetrics();
+        });
+    });
+
+    allNumInputs.forEach(input => {
+        if(localStorage.getItem(input.id)) {
+            input.value = localStorage.getItem(input.id);
+        }
+        input.addEventListener("input", () => {
+            localStorage.setItem(input.id, input.value);
+            evaluateMetrics();
+        });
+    });
+
+    evaluateMetrics();
+}
+
+function evaluateMetrics() {
+    let totalTasks = 0;
+    let completedTasks = 0;
+    
+    let subjectReadyCount = { "Physics": 0, "Chemistry": 0, "Mathematics": 0 };
+    let subjectTotalChapters = { 
+        "Physics": syllabusData["Physics"].length, 
+        "Chemistry": syllabusData["Chemistry"].length, 
+        "Mathematics": syllabusData["Mathematics"].length 
+    };
+
+    for (let subject in syllabusData) {
+        syllabusData[subject].forEach((chapter, index) => {
+            let isTheory = document.getElementById(`cb_${subject}_${index}_theory`).checked;
+            let isPyq = document.getElementById(`cb_${subject}_${index}_pyq`).checked;
+            let isRev1 = document.getElementById(`cb_${subject}_${index}_rev1`).checked;
+            let isRev2 = document.getElementById(`cb_${subject}_${index}_rev2`).checked;
+            
+            let isNcert = false;
+            if(subject === "Mathematics") {
+                isNcert = document.getElementById(`cb_${subject}_${index}_ncert_examp`).checked && 
+                          document.getElementById(`cb_${subject}_${index}_ncert_exer`).checked;
+            } else {
+                isNcert = document.getElementById(`cb_${subject}_${index}_ncert`).checked;
+            }
+
+            let testScoreInput = document.getElementById(`score_${subject}_${index}`);
+            let testScore = parseInt(testScoreInput.value) || 0;
+
+            taskTemplates[subject].forEach(task => {
+                totalTasks++;
+                if(document.getElementById(`cb_${subject}_${index}_${task.id}`).checked) {
+                    completedTasks++;
+                }
+            });
+
+            let cardElement = document.getElementById(`card_${subject}_${index}`);
+            if(isTheory && isNcert && isPyq && testScore >= 70 && isRev1 && isRev2) {
+                cardElement.classList.add("ready");
+                subjectReadyCount[subject]++;
+            } else {
+                cardElement.classList.remove("ready");
+            }
+        });
+    }
+
+    let overallPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+    
+    document.getElementById("overallFill").style.width = overallPercentage + "%";
+    document.getElementById("overallPercent").innerText = overallPercentage + "%";
+    document.getElementById("totalTasksCount").innerText = `Tasks Done: ${completedTasks} / ${totalTasks}`;
+    
+    let totalChaptersCount = subjectTotalChapters["Physics"] + subjectTotalChapters["Chemistry"] + subjectTotalChapters["Mathematics"];
+    let readyChaptersCount = subjectReadyCount["Physics"] + subjectReadyCount["Chemistry"] + subjectReadyCount["Mathematics"];
+    let readinessPercent = totalChaptersCount > 0 ? Math.round((readyChaptersCount / totalChaptersCount) * 100) : 0;
+    
+    document.getElementById("dashReadiness").innerText = readinessPercent + "%";
+    
+    if(readinessPercent >= 85) {
+        document.getElementById("dashReadiness").style.color = "var(--accent-green)";
+    } else {
+        document.getElementById("dashReadiness").style.color = "var(--accent-yellow)";
+    }
+
+    document.getElementById("physicsCount").innerText = `${subjectReadyCount["Physics"]} / ${subjectTotalChapters["Physics"]}`;
+    document.getElementById("chemistryCount").innerText = `${subjectReadyCount["Chemistry"]} / ${subjectTotalChapters["Chemistry"]}`;
+    document.getElementById("mathCount").innerText = `${subjectReadyCount["Mathematics"]} / ${subjectTotalChapters["Mathematics"]}`;
+}
+
+window.addEventListener("DOMContentLoaded", initTrackingEngine);
+</script>
+</body>
+</html>
